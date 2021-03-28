@@ -1,52 +1,20 @@
 <template>
   <div class="todo-footer">
     <label>
-      <input type="checkbox" v-model="isAllEnd"/>
+      <slot name="left"/>
     </label>
-    <span>
-          <span>已完成{{ endTodo.length }}</span> / 全部{{ this.todos.length }}
-        </span>
-    <button class="btn btn-danger" @click="clearEndTodo">清除已完成任务</button>
+      <slot name="middle"/>
+  <slot name="right">aaa</slot>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    todos: {
-      type: Array,
-      redirected: true
-    },
-    checkAll: {
-      type: Function,
-      redirected: true
-    },
-    clearEndTodo:{
-      type: Function,
-      redirected: true
-    }
-
-  },
   data() {
     return {}
   },
 
   computed: {
-    endTodo: {
-      get() {
-        return this.todos.filter(item => {
-          return item.status === true
-        })
-      }
-    },
-    isAllEnd: {
-      get() {
-        return this.todos.length === this.endTodo.length && this.endTodo.length > 0
-      },
-      set(value) {
-        this.checkAll(value)
-      }
-    },
 
   },
   methods:{

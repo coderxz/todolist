@@ -3,9 +3,7 @@
     <Item v-for="(item,index) in todos"
           :todo="item"
           :key="item.id"
-          :updataStatus="updataStatus"
           :index="index"
-          :deleteItem="deleteItem"
     />
   </ul>
 </template>
@@ -18,14 +16,6 @@ export default {
     todos: {
       type: Array,
       redirected: true
-    },
-    updataStatus:{
-      type:Function,
-      redirected: true
-    },
-    deleteItem:{
-      type:Function,
-      redirected:true
     }
   },
   data() {

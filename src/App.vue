@@ -1,15 +1,16 @@
 <template>
   <div class="todo-container">
     <div class="todo-wrap">
-      <Header :addTodo="addTodo"/>
+      <Header ref="header"/>
       <List :todos="todos"
-            :updataStatus="updataStatus"
-            :deleteItem="deleteItem"
       />
-      <Footer :todos="todos"
-              :checkAll="checkAll"
-              :clearEndTodo="clearEndTodo"
-      />
+      <Footer>
+      <input type="checkbox" v-model="isAllEnd" slot="left"/>
+      <span slot="middle">
+      <span>已完成{{ endTodo.length }}</span> / 全部{{ this.todos.length }}
+      </span>
+      <button class="btn btn-danger" @click="clearEndTodo" slot="right">清除已完成任务</button>
+      </Footer>
     </div>
   </div>
 </template>
@@ -18,6 +19,9 @@
 import Footer from "@components/Footer";
 import Header from "@components/Header";
 import List from "@components/List";
+import pubsub from 'pubsub-js'
+
+
 
 export default {
   data() {
@@ -26,10 +30,13 @@ export default {
     }
   },
   mounted() {
+    this.$refs.header.$on('addTodo',this.addTodo)
+    this.$bus.$on('deleteItem',this.deleteItem)
     setTimeout(() => {
           this.todos = JSON.parse(localStorage.getItem('todo_key') || '[]')
         },
         1000)
+    var token = pubsub.subscribe('UPSTATE',this.updataStatus)
   },
   components: {
     Footer,
@@ -38,8 +45,9 @@ export default {
   },
   methods: {
     //更新状态
-    updataStatus(value, todos) {
-      todos.status = value
+    updataStatus(msg,values) {
+      console.log(values);
+      values.todo.status = values.isCheck
     },
     //添加事务
     addTodo(newTodo) {
@@ -68,6 +76,23 @@ export default {
         localStorage.setItem('todo_key', JSON.stringify(value))
       }
     }
+  },
+  computed:{
+        endTodo: {
+      get() {
+        return this.todos.filter(item => {
+          return item.status === true
+        })
+      }
+    },
+    isAllEnd: {
+      get() {
+        return this.todos.length === this.endTodo.length && this.endTodo.length > 0
+      },
+      set(value) {
+        this.checkAll(value)
+      }
+    },
   }
 }
 </script>

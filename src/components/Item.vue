@@ -7,27 +7,21 @@
       <input type="checkbox" v-model="todoStatus"/>
       <span>{{todo.title}}</span>
     </label>
-    <button class="btn btn-danger" v-show="isShow" @click="deleteItem(index)">删除</button>
+    <button class="btn btn-danger" v-show="isShow" @click="deleteItem">删除</button>
   </li>
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
+
 export default {
   props:{
     todo:{
       type:Object,
       redirected:true
     },
-    updataStatus:{
-      type:Function,
-      redirected: true
-    },
     index:{
       type:Number,
-      redirected:true
-    },
-    deleteItem:{
-      type:Function,
       redirected:true
     }
   },
@@ -36,13 +30,17 @@ export default {
       isShow:false
     }
   },
+  mounted(){
+
+  },
   computed:{
     todoStatus:{
       get(){
         return this.todo.status
       },
       set(value){
-        this.updataStatus(value,this.todo)
+        // this.updataStatus(value,this.todo)
+        pubsub.publish('UPSTATE',{isCheck:value,todo:this.todo})
       }
     }
   },
@@ -56,6 +54,11 @@ export default {
         //移除逻辑
         this.isShow = false
         this.$refs.listyle.style='#fff'
+      }
+    },
+    deleteItem(){
+      if (confirm('确认删除嘛?')){
+        this.$bus.$emit('deleteItem',this.index)
       }
     }
   }

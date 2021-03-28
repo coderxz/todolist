@@ -12,11 +12,6 @@
 
 <script>
 export default {
-  props:{
-    addTodo:{
-      type:Function
-    }
-  },
   data(){
     return {
       title:''
@@ -27,7 +22,8 @@ export default {
       if (this.title.trim()===''){
         alert('请输入待办事务')
       }else{
-        this.addTodo({id:Date.now(),title:this.title,status:false})
+        // this.addTodo({id:Date.now(),title:this.title,status:false})
+        this.$emit('addTodo',{id:Date.now(),title:this.title,status:false})
       }
       this.title=''
     }

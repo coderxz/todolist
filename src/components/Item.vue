@@ -1,16 +1,49 @@
 <template>
-  <li>
+  <li @mouseenter="mouseMove(true)" @mouseleave="mouseMove(false)" ref="mouseLiItem">
     <label>
-      <input type="checkbox"/>
-      <span>yyyy</span>
+      <input type="checkbox" v-model="todos.status"/>
+      <span>{{todos.title}}</span>
     </label>
-    <button class="btn btn-danger" style="display:none">删除</button>
+    <button class="btn btn-danger" style="display: none" ref="btnItem" @click="deleteItem(index)">删除</button>
   </li>
 </template>
 
 <script>
 export default {
-  name: "Item"
+  name: "Item",
+  props:{
+    todos:{
+      type:Object,
+      redirect:true
+    },
+    deleteItem:{
+      type:Function,
+      redirect: true
+    },
+    index:{
+      type:Number,
+      redirect:true
+    }
+  },
+  data(){
+    return {
+
+    }
+  },
+  mounted() {
+    console.log(this.deleteItem)
+  },
+  methods:{
+    mouseMove(flag){
+      if (flag){
+        this.$refs.mouseLiItem.style.backgroundColor = '#eee'
+        this.$refs.btnItem.style.display = 'block'
+      }else{
+        this.$refs.mouseLiItem.style.backgroundColor = '#fff'
+        this.$refs.btnItem.style.display = 'none'
+      }
+    }
+  }
 }
 </script>
 
@@ -37,7 +70,6 @@ li label li input {
 
 li button {
   float: right;
-  display: none;
   margin-top: 3px;
 }
 

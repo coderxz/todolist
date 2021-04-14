@@ -1,7 +1,6 @@
 <template>
   <ul class="todo-main">
-    <Item/>
-    <Item/>
+    <Item v-for="(item,index) in todos" :todos="item" :key="item.id" :index="index" :deleteItem="deleteItem"/>
   </ul>
 </template>
 
@@ -9,6 +8,19 @@
 import Item from "@components/Item";
 export default {
   name: "List",
+  props:{
+    todos:{
+      type:Array,
+      redirect:true
+    },
+    deleteItem:{
+      type:Function,
+      redirect: true
+    }
+  },
+  mounted() {
+    console.log(this.todos)
+  },
   components:{
     Item
   }

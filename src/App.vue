@@ -1,9 +1,9 @@
 <template>
   <div class="todo-container">
     <div class="todo-wrap">
-      <Header/>
+      <Header :addTodoItem="addTodoItem"/>
       <List :todos="todos" :deleteItem="deleteItem"/>
-      <Footer :todos="todos"/>
+      <Footer :todos="todos" :showDoneAllItem="showDoneAllItem" :clearDoneAll="clearDoneAll"/>
     </div>
   </div>
 </template>
@@ -19,17 +19,17 @@ export default {
       todos: [
         {
           id: 'qweqw1112',
-          status: 1,
+          status: true,
           title: 'A事件'
         },
         {
           id: 'qweq1we1112',
-          status: 0,
+          status: false,
           title: 'B事件'
         },
         {
           id: 'qweqw1e112',
-          status: 1,
+          status: false,
           title: 'C事件'
         }
       ]
@@ -44,8 +44,21 @@ export default {
     List
   },
   methods: {
-    deleteItem(index){
-      this.todos.splice(index,1)
+    deleteItem(index) {
+      this.todos.splice(index, 1)
+    },
+    addTodoItem(todo) {
+      this.todos.unshift(todo)
+    },
+    showDoneAllItem(flag) {
+      this.todos.forEach(item => {
+        item.status = flag
+      })
+    },
+    clearDoneAll() {
+      this.todos = this.todos.filter(item => {
+        return item.status === false
+      })
     }
 
   },

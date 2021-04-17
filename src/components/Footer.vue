@@ -1,12 +1,12 @@
 <template>
   <div class="todo-footer">
     <label>
-      <input type="checkbox"/>
+      <input type="checkbox" v-model="isDoneAll"/>
     </label>
     <span>
           <span>已完成{{ doneItem }}</span> / 全部{{ todos.length }}
         </span>
-    <button class="btn btn-danger">清除已完成任务</button>
+    <button class="btn btn-danger" v-if="showDoneAll" @click="clearDoneAll">清除已完成任务</button>
   </div>
 </template>
 
@@ -17,14 +17,39 @@ export default {
     todos: {
       type: Array,
       redirect: true
+    },
+    showDoneAllItem: {
+      type: Function,
+      redirect: true
+    },
+    clearDoneAll: {
+      type: Function,
+      redirect: true
     }
+  },
+  mounted() {
+    console.log(this.showDoneAll)
   },
   computed: {
     doneItem() {
       return this.todos.filter(item => {
-        return item.status === 1
+        return item.status === true
       }).length
-    }
+    },
+    showDoneAll: {
+      get() {
+        return this.todos.length && this.doneItem
+      }
+    },
+    isDoneAll: {
+      get() {
+        return this.todos.length === this.doneItem && this.todos.length
+      },
+      set(newValue) {
+        console.log(newValue)
+        this.showDoneAllItem(newValue)
+      }
+    },
   }
 }
 </script>
